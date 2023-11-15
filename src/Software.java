@@ -3,11 +3,11 @@ package src;
 
 public class Software {
     String name;
-    double version;
+    String version;
     int quantity;
-    double price;
+    int price;
 
-    public Software(String name, double version, int quantity, double price) {
+    public Software(String name, String version, int quantity, int price) {
         this.name = name;
         this.version = version;
         this.quantity = quantity;
@@ -22,11 +22,11 @@ public class Software {
         this.name = name;
     }
 
-    public double getVersion() {
+    public String getVersion() {
         return this.version;
     }
 
-    public void setVersion(double version) {
+    public void setVersion(String version) {
         this.version = version;
     }
 
@@ -35,20 +35,24 @@ public class Software {
     }
 
     public void setQuantity(int quantity) {
-        this.quantity = quantity;
+        if(quantity < 0){
+            throw new IllegalArgumentException("Quantity cannot be negative");
+        }else{
+            this.quantity = quantity;
+        }
     }
 
     public double getPrice() {
         return this.price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(int price) {
         this.price = price;
     }
 
     @Override
     public String toString() {
-        return String.format("%-20s%-5d%-10d%-10d", name,version,quantity,price);
+        return String.format("%-30s%-10s%-10d%-10d\n", name,version,quantity,price);
     }
 
 }
