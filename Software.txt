@@ -22,3 +22,11 @@ Windows OS
 Vista
 4
 1200
+MacOS
+M2
+0
+2032
+Redmi OS
+-
+20
+3021

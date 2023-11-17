@@ -16,12 +16,12 @@ public class BST implements Comparator<Software> {
     public void visit(Node p) {
         System.out.print(p.key);
     }
-    public Software search(String el, String el2){
+    public Software search(Software el){
         Node p = root;
         while (p !=null) {
-            if(compare(p.key, el) == 0 && comparebyVersion(p.key, el2) == 0)
+            if(compare(p.key, el) == 0 && comparebyVersion(p.key, el) == 0)
                 return p.key;
-            else if(compare(p.key,el) < 0 && comparebyVersion(p.key, el2) < 0)
+            else if(compare(p.key,el) < 0 && comparebyVersion(p.key, el) < 0)
                 p = p.left;
             else p = p.right;
         }
@@ -116,27 +116,24 @@ public class BST implements Comparator<Software> {
         }
     }
     public void printData() throws Exception{
-        BufferedWriter br = new BufferedWriter(new FileWriter("UpdatedData.txt"));
+        BufferedWriter br = new BufferedWriter(new FileWriter("Software.txt"));
         StringBuilder sb = new StringBuilder();
         Node p = root;
         ArrayList<Software> list = new ArrayList<>();
         inorder(p,list);
         
-        
-        System.out.println("Quantity !=0");
         for(Software x: list){
             if(x.quantity != 0){
-                System.out.println(x);
+                System.out.print(x);
                 sb.append(x.name+"\n");
                 sb.append(x.version+"\n");
                 sb.append(x.quantity+"\n");
                 sb.append(x.price+"\n");
             }
         }
-        System.out.println("\nQuantity = 0");
         for(Software x: list){
             if(x.quantity == 0){
-                System.out.println(x);
+                System.out.print(x);
                 sb.append(x.name+"\n");
                 sb.append(x.version+"\n");
                 sb.append(x.quantity+"\n");
@@ -145,7 +142,7 @@ public class BST implements Comparator<Software> {
         }
         br.write(sb.toString());
         br.close();
-        System.out.println("Data has been updated. see UpdatedData.txt");
+        System.out.println("Data has been updated. see Software.txt");
     }
 
     // Comaparitor

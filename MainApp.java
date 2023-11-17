@@ -1,5 +1,9 @@
+import java.io.File;
 import java.io.FileReader;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
+
+import org.omg.CORBA.DynAnyPackage.InvalidValue;
 
 import src.BST;
 import src.Software;
@@ -12,28 +16,8 @@ import src.Software;
 public class MainApp {
     static BST tree = new BST();
     public static void main(String[] args)  {
-
-        try(Scanner sc = new Scanner(new FileReader("Software.txt"))){
-            
-            while(sc.hasNextLine()){
-                
-                String name = sc.nextLine().trim();
-                String version = sc.nextLine().trim();
-                int quantity = Integer.parseInt(sc.nextLine().trim());
-                int price = Integer.parseInt(sc.nextLine().trim());
-                
-                Software sf = new Software(name, version, quantity, price);
-                tree.insert(sf);
-            }
-            
-        } catch(Exception e){
-            
-            System.err.println(e);
-        }
-        
-
         try(Scanner sc = new Scanner(System.in)){
-
+            GenerateData(new FileReader("Software.txt"));
             while (true) {
                 DisplayMenu();
                 try{
@@ -79,16 +63,17 @@ public class MainApp {
                 price = Integer.valueOf(sc.nextLine().trim());
 
                 System.out.println("----------------------------------------------------------");
-                sf = tree.search(name, version);
+                sf = tree.search(new Software(name, version, quantity, price));
                 if (sf == null){
                     sf = new Software(name, version, quantity, price);
                     tree.insert(sf);
                     System.out.println("Software "+ sf.getName() + " has been added to the tree");
                 }else{
                     try{
-                        System.out.println(sf);
+                        
                         sf.setQuantity(sf.getQuantity() + quantity);
                         tree.deleteByCopying(sf);
+                        System.out.println(sf);
                         tree.insert(sf);
                     } catch(Exception e){
                         System.out.println(e);
@@ -108,7 +93,7 @@ public class MainApp {
                 price = Integer.valueOf(sc.nextLine().trim());
 
                 System.out.println("----------------------------------------------------------");
-                sf = tree.search(name, version);
+                sf = tree.search(new Software(name, version, quantity, price));
                 if (sf == null){
                     System.out.println("No Specified Software Found");
                 }else{
@@ -134,7 +119,50 @@ public class MainApp {
         }
         return true;
     }
+    public static void GenerateData(FileReader fr){
+        try(Scanner sc = new Scanner(fr)){
+            
+            while(sc.hasNextLine()){
+                
+                String name = "", version = "";
+                int quantity = 0, price = 0;
 
+                try{
+                    name = sc.nextLine().trim();
+                    version = sc.nextLine().trim();
+                    quantity = Integer.parseInt(sc.nextLine().trim());
+                    price = Integer.parseInt(sc.nextLine().trim());
+                    
+                } catch(NoSuchElementException e){
+                    // This error will occur when version is missing
+                    // eg.
+                    /* 
+                     * Mac OS <- name
+                     * 12     <- quantity
+                     * 2032   <- price
+                    */
+
+                    price = Integer.valueOf(quantity);
+                    quantity = Integer.valueOf(version);
+                    version = "-";
+                } catch(Exception e){
+                    System.err.println("Exception: " + e);
+                }
+
+                if(quantity == 0){
+                    continue;
+                }
+                else{    
+                    Software sf = new Software(name, version, quantity, price);
+                    tree.insert(sf);
+                }
+            }
+            
+        } catch(Exception e){
+            
+            System.err.println(e);
+        }
+    }
     public static void DisplayMenu(){
         System.out.printf("%-60s\n","Software Store");
         System.out.println("----------------------------------------------------------");
